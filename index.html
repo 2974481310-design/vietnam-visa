@@ -719,31 +719,31 @@ async function submitForm() {
   document.getElementById('outputArea').style.display = 'block';
   document.getElementById('outputArea').scrollIntoView({behavior:'smooth'});
 
-  // Send email via FormSubmit
+  // Send via Web3Forms
   try {
-    const formData = new FormData();
-    formData.append('_subject', `【越南签证申请】${g('lastName')} ${g('firstName')} / ${g('entryDate')}`);
-    formData.append('message', summary);
-    formData.append('_captcha', 'false');
-    formData.append('_template', 'basic');
-    formData.append('_autoresponse', '您的越南签证申请信息已收到，客服将尽快处理，请留意联系方式。');
-
-    const res = await fetch('https://formsubmit.co/2974481310@qq.com', {
+    const res = await fetch('https://api.web3forms.com/submit', {
       method: 'POST',
-      body: formData
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({
+        access_key: '88964b96-e5fc-4503-a7a1-f5163653d54d',
+        subject: `【越南签证申请】${g('lastName')} ${g('firstName')} / ${g('entryDate')}`,
+        message: summary,
+        from_name: `${g('lastName')} ${g('firstName')}`,
+      })
     });
+    const json = await res.json();
     const statusEl = document.getElementById('emailStatus');
-    if (res.ok) {
-      statusEl.textContent = '✅ 信息已发送至客服邮箱！请在闲鱼付款并发送照片。';
+    if (json.success) {
+      statusEl.textContent = '✅ 信息已提交成功！请在闲鱼付款并将照片发送给客服。';
       statusEl.className = 'email-status success';
     } else {
-      statusEl.textContent = '⚠️ 提交遇到问题，请截图联系客服或重新提交。';
+      statusEl.textContent = '⚠️ 提交失败：' + (json.message || '请重试');
       statusEl.className = 'email-status error';
     }
     statusEl.style.display = 'block';
   } catch(e) {
     const statusEl = document.getElementById('emailStatus');
-    statusEl.textContent = '⚠️ 提交遇到问题，请截图联系客服或重新提交。';
+    statusEl.textContent = '⚠️ 网络错误，请检查网络后重新提交。';
     statusEl.className = 'email-status error';
     statusEl.style.display = 'block';
   }
