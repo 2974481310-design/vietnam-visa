@@ -366,7 +366,7 @@
 <div class="container">
 
   <div class="tips-bar">
-    📋 填写完成后点击提交，信息将自动发送至客服邮箱<br>
+    📋 填写完成后点击提交即可<br>
     💡 所有标 <span style="color:var(--red);font-weight:700">*</span> 的字段为必填项
   </div>
 
@@ -592,36 +592,21 @@
   <!-- Photo upload -->
   <div class="section">
     <div class="section-title"><span class="icon">📷</span>照片上传</div>
-    <div class="photo-grid">
-      <div>
-        <div class="photo-upload" id="photoBox1" onclick="document.getElementById('photoInput1').click()">
-          <input type="file" id="photoInput1" accept="image/*" onchange="previewPhoto(this,'photoBox1','preview1')">
-          <div class="upload-icon">🤳</div>
-          <img class="preview" id="preview1" src="" alt="">
-          <div class="upload-label">本人照片<span style="color:var(--red)">*</span></div>
-          <div class="upload-hint">白底正面免冠照</div>
-        </div>
-      </div>
-      <div>
-        <div class="photo-upload" id="photoBox2" onclick="document.getElementById('photoInput2').click()">
-          <input type="file" id="photoInput2" accept="image/*" onchange="previewPhoto(this,'photoBox2','preview2')">
-          <div class="upload-icon">📘</div>
-          <img class="preview" id="preview2" src="" alt="">
-          <div class="upload-label">护照首页照片<span style="color:var(--red)">*</span></div>
-          <div class="upload-hint">清晰拍摄护照资料页</div>
-        </div>
-      </div>
-    </div>
-    <div class="photo-req">
+    <div style="font-size:0.84rem;line-height:1.9;color:#374151;">
       🤳 <strong>本人照片要求：</strong><br>
       · 需为近期新拍照片，尺寸 <strong>4×6厘米</strong><br>
       · 格式：<strong>JPG / JPEG</strong>，文件大小 <strong>&lt; 2MB</strong><br>
       · 正面直视镜头，不戴帽子、不戴眼镜<br>
       · 穿着正式服装，<strong>纯白色背景</strong><br><br>
-      📘 <strong>护照页上传要求：</strong><br>
+      📘 <strong>护照页照片要求：</strong><br>
       · 仅上传护照信息首页 <strong>1张</strong><br>
       · 照片清晰完整，<strong>四个角不能裁切缺失</strong>
     </div>
+  </div>
+
+  <!-- Photo reminder -->
+  <div style="background:#fff8e1;border-left:4px solid #f5a623;border-radius:10px;padding:12px 16px;margin-bottom:16px;font-size:0.82rem;color:#7a5c00;line-height:1.7;">
+    📱 <strong>照片发送方式：</strong>在闲鱼拍下商品付款后，请将本人照片和护照首页照片直接发送至客服闲鱼消息即可。
   </div>
 
   <!-- Payment -->
@@ -646,7 +631,6 @@
 
 <script>
 let selectedVisa = '单次入境 ¥208';
-let photoData1 = null, photoData2 = null;
 
 function selectVisa(el, type) {
   document.querySelectorAll('.visa-option').forEach(o => o.classList.remove('active'));
@@ -656,19 +640,7 @@ function selectVisa(el, type) {
   document.getElementById('visaType').value = selectedVisa;
 }
 
-function previewPhoto(input, boxId, previewId) {
-  if (!input.files || !input.files[0]) return;
-  const file = input.files[0];
-  const reader = new FileReader();
-  reader.onload = e => {
-    const img = document.getElementById(previewId);
-    img.src = e.target.result;
-    document.getElementById(boxId).classList.add('has-file');
-    if (boxId === 'photoBox1') photoData1 = e.target.result;
-    else photoData2 = e.target.result;
-  };
-  reader.readAsDataURL(file);
-}
+
 
 function g(id) { return (document.getElementById(id)?.value || '').trim(); }
 
@@ -692,48 +664,45 @@ function validate() {
 }
 
 function buildSummary() {
-  return `━━━━━━━━━━━━━━━━━━━━━━
-🇻🇳 越南电子签证申请信息
-━━━━━━━━━━━━━━━━━━━━━━
+  return `【越南电子签证申请信息】
 
-【签证类型】${selectedVisa}
+签证类型：        ${selectedVisa}
 
-【个人基本信息】
-英文姓名：${g('lastName')} ${g('firstName')}
-性别：${g('gender')}
-出生日期：${g('dob')}
-出生城市：${g('birthCity')}
-国籍：${g('nationality')}
-职业：${g('occupation')}
-宗教信仰：${g('religion') || '无'}
-当前居住地址：${g('currentAddress')}
+─── 个人基本信息 ─────────────────
+英文姓 Last Name：  ${g('lastName')}
+英文名 First Name： ${g('firstName')}
+性别：            ${g('gender')}
+出生日期：         ${g('dob')}
+出生城市：         ${g('birthCity')}
+国籍：            ${g('nationality')}
+职业：            ${g('occupation')}
+宗教信仰：         ${g('religion') || 'None'}
+当前居住地址：      ${g('currentAddress')}
 
-【护照信息】
-护照号码：${g('passportNo')}
-签发日期：${g('issueDate')}
-到期日期：${g('expiryDate')}
+─── 护照信息 ─────────────────────
+护照号码：         ${g('passportNo')}
+签发日期：         ${g('issueDate')}
+到期日期：         ${g('expiryDate')}
 
-【行程信息】
-计划入境日期：${g('entryDate')}
-计划离开日期：${g('exitDate')}
-计划入境时长：${g('stayDuration')}
-计划入境口岸：${g('entryPort')}
-入境目的：${g('purpose')}
-越南住宿地址：${g('vnAddress')}
+─── 行程信息 ─────────────────────
+计划入境日期：      ${g('entryDate')}
+计划离开日期：      ${g('exitDate')}
+计划入境时长：      ${g('stayDuration')}
+计划入境口岸：      ${g('entryPort')}
+入境目的：         ${g('purpose')}
+越南住宿地址：      ${g('vnAddress')}
 
-【联系信息】
-邮箱：${g('email')}
-手机：${g('phone')}
-国内居住地址：${g('homeAddress')}
+─── 联系信息 ─────────────────────
+邮箱：            ${g('email')}
+手机：            ${g('phone')}
+国内居住地址：      ${g('homeAddress')}
 
-【紧急联系人】
-姓名：${g('emergencyName')}
-电话：${g('emergencyPhone')}
-与本人关系：${g('emergencyRelation')}
+─── 紧急联系人 ───────────────────
+姓名：            ${g('emergencyName')}
+电话：            ${g('emergencyPhone')}
+与本人关系：       ${g('emergencyRelation')}
 
-━━━━━━━━━━━━━━━━━━━━━━
-📷 照片：${photoData1 ? '✅本人照片已上传' : '❌本人照片未上传'} | ${photoData2 ? '✅护照照片已上传' : '❌护照照片未上传'}
-━━━━━━━━━━━━━━━━━━━━━━`;
+`;
 }
 
 async function submitForm() {
@@ -753,23 +722,19 @@ async function submitForm() {
   // Send email via FormSubmit
   try {
     const formData = new FormData();
-    formData.append('_subject', `越南签证申请 - ${g('lastName')} ${g('firstName')}`);
-    formData.append('信息摘要', summary);
+    formData.append('_subject', `【越南签证申请】${g('lastName')} ${g('firstName')} / ${g('entryDate')}`);
+    formData.append('message', summary);
     formData.append('_captcha', 'false');
-    formData.append('_template', 'table');
-    if (document.getElementById('photoInput1').files[0])
-      formData.append('本人照片', document.getElementById('photoInput1').files[0]);
-    if (document.getElementById('photoInput2').files[0])
-      formData.append('护照照片', document.getElementById('photoInput2').files[0]);
+    formData.append('_template', 'basic');
+    formData.append('_autoresponse', '您的越南签证申请信息已收到，客服将尽快处理，请留意联系方式。');
 
-    // ⚠️ 替换下方 YOUR_EMAIL 为您自己的邮箱
     const res = await fetch('https://formsubmit.co/2974481310@qq.com', {
       method: 'POST',
       body: formData
     });
     const statusEl = document.getElementById('emailStatus');
     if (res.ok) {
-      statusEl.textContent = '✅ 信息已提交成功！客服将尽快与您联系。';
+      statusEl.textContent = '✅ 信息已发送至客服邮箱！请在闲鱼付款并发送照片。';
       statusEl.className = 'email-status success';
     } else {
       statusEl.textContent = '⚠️ 提交遇到问题，请截图联系客服或重新提交。';
