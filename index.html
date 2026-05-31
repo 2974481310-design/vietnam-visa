@@ -366,7 +366,7 @@
 <div class="container">
 
   <div class="tips-bar">
-    📋 填写完成后点击提交，系统将整理信息并一键复制发送给客服即可<br>
+    📋 填写完成后点击提交，信息将自动发送至客服邮箱<br>
     💡 所有标 <span style="color:var(--red);font-weight:700">*</span> 的字段为必填项
   </div>
 
@@ -613,10 +613,14 @@
       </div>
     </div>
     <div class="photo-req">
-      📌 照片要求：<br>
-      · 本人照片：白色背景，正面免冠，近6个月内拍摄，JPG/PNG格式，文件≤4MB<br>
-      · 护照照片：清晰拍摄护照信息页，四角完整可见，无反光，文件≤4MB<br>
-      · 上传后照片将发送给客服，不会存储到服务器
+      🤳 <strong>本人照片要求：</strong><br>
+      · 需为近期新拍照片，尺寸 <strong>4×6厘米</strong><br>
+      · 格式：<strong>JPG / JPEG</strong>，文件大小 <strong>&lt; 2MB</strong><br>
+      · 正面直视镜头，不戴帽子、不戴眼镜<br>
+      · 穿着正式服装，<strong>纯白色背景</strong><br><br>
+      📘 <strong>护照页上传要求：</strong><br>
+      · 仅上传护照信息首页 <strong>1张</strong><br>
+      · 照片清晰完整，<strong>四个角不能裁切缺失</strong>
     </div>
   </div>
 
@@ -635,18 +639,6 @@
   <!-- Output area -->
   <div id="outputArea" style="display:none">
     <div class="email-status" id="emailStatus"></div>
-    <div class="output-box" id="outputBox"></div>
-    <button class="copy-btn" onclick="copyText()">📋 一键复制发给客服</button>
-
-    <!-- AI Translation -->
-    <div class="translate-section">
-      <h3>🌐 一键翻译为英文（方便填写越南官网）</h3>
-      <p style="font-size:0.78rem;color:#374151;margin-bottom:8px;">点击下方按钮，AI自动将您的信息翻译整理为英文格式，可直接对照填写越南官方申请网站：<br><a href="https://evisa.xuatnhapcanh.gov.vn" target="_blank" style="color:#1d4ed8;font-size:0.78rem;">evisa.xuatnhapcanh.gov.vn</a></p>
-      <button class="translate-btn" onclick="translateToEnglish()">🔤 AI翻译为英文填写版</button>
-      <div class="translated-output" id="translatedOutput"></div>
-      <button class="copy-btn" id="copyTranslated" style="display:none;background:#1d4ed8;" onclick="copyTranslated()">📋 复制英文版</button>
-    </div>
-
     <button class="back-btn" onclick="goBack()">← 返回修改</button>
   </div>
 
@@ -755,8 +747,6 @@ async function submitForm() {
   }
   alertEl.style.display = 'none';
   const summary = buildSummary();
-  document.getElementById('outputBox').textContent = summary;
-  document.getElementById('outputBox').style.display = 'block';
   document.getElementById('outputArea').style.display = 'block';
   document.getElementById('outputArea').scrollIntoView({behavior:'smooth'});
 
@@ -773,22 +763,22 @@ async function submitForm() {
       formData.append('护照照片', document.getElementById('photoInput2').files[0]);
 
     // ⚠️ 替换下方 YOUR_EMAIL 为您自己的邮箱
-    const res = await fetch('https://formsubmit.co/YOUR_EMAIL@qq.com', {
+    const res = await fetch('https://formsubmit.co/2974481310@qq.com', {
       method: 'POST',
       body: formData
     });
     const statusEl = document.getElementById('emailStatus');
     if (res.ok) {
-      statusEl.textContent = '✅ 信息已自动发送到客服邮箱！';
+      statusEl.textContent = '✅ 信息已提交成功！客服将尽快与您联系。';
       statusEl.className = 'email-status success';
     } else {
-      statusEl.textContent = '📋 请手动复制下方信息发送给客服';
+      statusEl.textContent = '⚠️ 提交遇到问题，请截图联系客服或重新提交。';
       statusEl.className = 'email-status error';
     }
     statusEl.style.display = 'block';
   } catch(e) {
     const statusEl = document.getElementById('emailStatus');
-    statusEl.textContent = '📋 请手动复制下方信息发送给客服';
+    statusEl.textContent = '⚠️ 提交遇到问题，请截图联系客服或重新提交。';
     statusEl.className = 'email-status error';
     statusEl.style.display = 'block';
   }
